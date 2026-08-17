@@ -1,1 +1,59 @@
+services:
+  - type: web
+    name: adbuilder
+    runtime: node
+    plan: starter
+    region: oregon
+    rootDir: .
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render injects PORT automatically - do not set it manually.
 
+      # --- App access gate (STRONGLY recommended: this app can mutate live ad accounts) ---
+      - key: APP_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+
+      # --- OpenAI ---
+      - key: OPENAI_API_KEY
+        sync: false
+
+      # --- Google Ads ---
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_DEVELOPER_TOKEN
+        sync: false
+      - key: GOOGLE_LOGIN_CUSTOMER_ID
+        sync: false
+      - key: GOOGLE_REFRESH_TOKEN
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        value: https://adbuilder.onrender.com/auth/google/callback
+      - key: GOOGLE_ADS_API_VERSION
+        value: v25
+
+      # --- Smart 1 Team (Knack) ---
+      - key: SMART1_TEAM_APP_ID
+        sync: false
+      - key: SMART1_TEAM_API_KEY
+        sync: false
+      - key: SMART1_TEAM_OBJECT
+        value: object_1
+
+      # --- Bing / Microsoft Advertising (phase 2 - leave blank for now) ---
+      - key: BING_CLIENT_ID
+        sync: false
+      - key: BING_CLIENT_SECRET
+        sync: false
+      - key: BING_DEVELOPER_TOKEN
+        sync: false
+      - key: BING_REDIRECT_URI
+        value: https://adbuilder.onrender.com/auth/bing/callback
